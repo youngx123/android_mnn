@@ -1,9 +1,75 @@
+1. [MNN Android 部署测试](#mnn-android-部署测试)
+   1. [YOLOV5](#yolov5)
+   2. [MNN_yolo](#mnn_yolo)
+   3. [MNN模型加载](#mnn模型加载)
+   4. [Note](#note)
+   5. [java与c++数据转换](#java与c数据转换)
+
+
+
 ## MNN Android 部署测试
 
+### YOLOV5
 利用 MNN 推理框架在安卓端进行部署，测试模型推理时间以及结果 
-
 ![](https://github.com/youngx123/android_mnn/blob/master/YOLOV5/result.jpg?raw=true)
+### MNN_yolo
 
+C++ MNN yolo v5 模型推理和结果显示
+
+
+### MNN模型加载
+```c++
+int INPUT_SIZE = 640;
+int forward = MNN_FORWARD_CPU;
+int precision = 0;
+int power = 0;
+int memory = 0;
+int threads = 1; // 线程个数
+
+MNN::Session *session;
+MNN::Interpreter  *model;
+MNN::ScheduleConfig config;
+
+// 文件配置
+config.numThread = threads;
+config.type = static_cast<MNNForwardType>(forward);
+// memory、power、precision分别为内存、功耗和精度偏好
+MNN::BackendConfig backendConfig;
+backendConfig.precision = (MNN::BackendConfig::PrecisionMode)precision;
+backendConfig.power = (MNN::BackendConfig::PowerMode) power;
+backendConfig.memory = (MNN::BackendConfig::MemoryMode) memory;
+
+config.backendConfig = &backendConfig;
+
+model = MNN::Interpreter::createFromFile(file.c_str());
+session = model->createSession(config);
+
+// 数据预处理
+std::string input_node = "images";
+std::string output_node = "output";
+MNN::Tensor *input_tensor = model->getSessionInput(session, nullptr); // input_node.c_str()
+// pass image to model(rgb format, pixels minus by 0 and then divided by 255.0)
+const float mean_vals[3] = { 0.0, 0.0, 0.0 };
+const float norm_vals[3] = {1.0 / 255.0, 1.0 / 255.0, 1.0 / 255.0 };
+std::shared_ptr<MNN::CV::ImageProcess> pretreat(MNN::CV::ImageProcess::create(MNN::CV::BGR, MNN::CV::RGB, mean_vals, 3, norm_vals, 3));
+pretreat->convert(image.data, INPUT_SIZE, INPUT_SIZE,INPUT_SIZE*3, input_tensor);
+
+// 模型输出和后处理
+auto tensor_scores = model->getSessionOutput(session, output_node.c_str());
+std::cout<< tensor_scores->shape()[0] << " "
+        << tensor_scores->shape()[1] <<" " 
+        << tensor_scores->shape()[2] << std::endl;
+
+int bboxes_num = tensor_scores->shape()[1];
+int category_num = tensor_scores->shape()[2];
+
+
+// convert pred to array
+float* output_array = tensor_scores->host<float>();
+
+// post processing
+std::vector<float> output_vector_boxes{ output_array, output_array + bboxes_num*category_num};
+```
 VS中相同图像处理方法在安卓调用时不起作用，导致结果不一致
 ```C++
 cv::resize(inputImg, image, cv::Size(INPUT_SIZE, INPUT_SIZE));
