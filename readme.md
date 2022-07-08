@@ -21,6 +21,13 @@ pretreat->convert(image.data, INPUT_SIZE, INPUT_SIZE,INPUT_SIZE*3, input_tensor)
 ```
 
 ```c++
+enum PrecisionMode {
+    Precision_Normal = 0,
+    Precision_High,
+    Precision_Low
+};
+int precision = 0;
+int precision = 2; //结果不一致
 MNN::BackendConfig backendConfig;
 backendConfig.precision = (MNN::BackendConfig::PrecisionMode)precision;
 ```
