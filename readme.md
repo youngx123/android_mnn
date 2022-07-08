@@ -72,7 +72,7 @@ J long
 F float
 D double
 
-String是通过Ljava/lang/String表示的，那相应的，String数组就应该是[Ljava/lang/String;
+String 是通过 Ljava/lang/String 表示的，那相应的， String 数组就应该是 [Ljava/lang/String;
 
 result = env->NewObjectArray(size, intArrCls, NULL); //的作用是为result分配空间
 
@@ -83,7 +83,7 @@ env->SetIntArrayRegion(iarr, 0, size, tmp);   //是为iarr赋值。
 env->SetObjectArrayElement(result, i, iarr);  //是为result的第i个元素赋值。
 ```
 
-一维数组
+__一维数组__
 ```java
 int callbackMethod(int num,vector<int> vArray)
 {
@@ -106,7 +106,7 @@ int callbackMethod(int num,vector<int> vArray)
 }
 ```
 
-二维数组
+__二维数组__
 ```JAVA
 JNIEXPORT jobjectArray JNICALL Java_ObjectArrayTest_initInt2DArray(JNIEnv *env, jclass cls, int size)
 {
@@ -130,5 +130,7 @@ JNIEXPORT jobjectArray JNICALL Java_ObjectArrayTest_initInt2DArray(JNIEnv *env, 
 ```
 
 >参考
+
 >https://www.jianshu.com/p/9ad1a7868e11
+
 >https://github.com/nihui/ncnn-android-yolov5
