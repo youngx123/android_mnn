@@ -5,6 +5,13 @@
    4. [Note](#note)
    5. [java与c++数据转换](#java与c数据转换)
 
+## Update
+手机打开开发者模式，仍然无法连接
+
+![](https://github.com/youngx123/pic/blob/main/inference/usb%E8%B0%83%E8%AF%95.png?raw=true)
+
+所需的 __include和libs文件__ 下载
+
 
 
 ## MNN Android 部署测试
