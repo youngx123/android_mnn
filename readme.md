@@ -12,6 +12,7 @@
 
 所需的 __include和libs文件__ 下载
 
+https://drive.google.com/file/d/1i3OOQlIIpaHHTwsBHVKr5mvJOO-UqYWT/view?usp=sharing
 
 
 ## MNN Android 部署测试
